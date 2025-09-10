@@ -4,11 +4,13 @@ from .schemas import UserBase, UserResponse, LoginUser, LoginUserResponse, Chang
 from .dao import UserDAO
 from .utils import generate_password
 from api.authentication.dependings import create_jwt_token, get_data_for_jwt, get_user_from_token
+from api.decorators import admin_required
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.get("/", response_model=list[UserResponse])
+@admin_required
 async def get_users(token: str = Depends(get_user_from_token)):
     return await UserDAO.all_records()
 

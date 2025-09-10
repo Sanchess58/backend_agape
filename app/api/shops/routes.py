@@ -4,7 +4,7 @@ from .schemas import ShopItemBase, ShopItemResponse, ShopItemBuy
 from .dao import ShopDAO
 from api.users.dao import UserDAO
 from api.authentication.dependings import get_user_from_token
-
+from api.decorators import admin_required
 
 
 router = APIRouter(prefix="/shops", tags=["Shops"])
@@ -16,6 +16,7 @@ async def get_shop_items(token: str = Depends(get_user_from_token)):
 
 
 @router.post("", response_model=ShopItemResponse)
+@admin_required
 async def create_shop_item(data: ShopItemBase, token: str = Depends(get_user_from_token)):
     return await ShopDAO.add(**data.model_dump(exclude_unset=True))
 

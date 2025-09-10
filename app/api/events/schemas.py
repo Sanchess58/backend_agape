@@ -29,3 +29,8 @@ class EventConfirmation(BaseModel):
     event_id: int
     user_id: int
     attended: bool
+
+
+class EventUsersResponse(BaseModel):
+    user_id: int
+    attended: bool | None

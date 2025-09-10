@@ -5,3 +5,8 @@ EVENT_NOT_STARTED = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
     detail="event_not_started",
 )
+
+ALREADY_REGISTERED = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="already_registered"
+)

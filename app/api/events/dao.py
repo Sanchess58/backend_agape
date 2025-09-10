@@ -5,7 +5,7 @@ from app.database import async_session_maker
 from app.exceptions import NOT_FOUND
 from api.users.models import User
 from api.users.dao import UserDAO
-from .exceptions import EVENT_NOT_STARTED
+from .exceptions import ALREADY_REGISTERED, EVENT_NOT_STARTED
 from .models import Event, EventUser
 
 class EventDAO(BaseDAO):
@@ -14,6 +14,15 @@ class EventDAO(BaseDAO):
 
 class EventUserDAO(BaseDAO):
     model = EventUser
+
+    @classmethod
+    async def registration(cls, user_id: int, **data):
+        async with async_session_maker() as session:
+            async with session.begin():
+                event_users = cls.find_all(user_id=user_id, **data)
+                if event_users:
+                    raise ALREADY_REGISTERED
+                cls.add(user_id=user_id, **data)
 
     @classmethod
     async def confirmation(cls, **data):
