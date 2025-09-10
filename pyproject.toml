@@ -1,0 +1,29 @@
+[project]
+name = "backend-agape"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Александр Сотников",email = "aleksandr.sotnikov@osinit.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "sqlalchemy",
+    "alembic",
+    "asyncpg",
+    "pydantic-settings",
+    "greenlet (>=3.2.2,<4.0.0)",
+    "PyJWT",
+    "passlib",
+]
+
+[tool.poetry]
+packages = [{include = "app"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
