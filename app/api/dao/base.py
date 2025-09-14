@@ -40,7 +40,7 @@ class BaseDAO:
             return result.scalar_one_or_none()
 
     @classmethod
-    async def find_all(cls, **filter_by):
+    async def find_all(cls, where=None, **filter_by):
         """
         Асинхронно находит и возвращает все экземпляры модели, удовлетворяющие указанным критериям.
 

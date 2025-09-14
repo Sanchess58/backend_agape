@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from sqlalchemy.future import select
+
 from app.api.dao.base import BaseDAO
 from app.database import async_session_maker
 from app.exceptions import NOT_FOUND
@@ -10,6 +12,13 @@ from .models import Event, EventUser
 
 class EventDAO(BaseDAO):
     model = Event
+
+    @classmethod
+    async def list_between_dates(cls, date_from: datetime, date_to: datetime) -> list[Event]:
+        async with async_session_maker() as session:
+            query = select(cls.model).where(cls.model.date_and_time.between(date_from, date_to))
+            res = await session.execute(query)
+            return res.scalars().all()
 
 
 class EventUserDAO(BaseDAO):

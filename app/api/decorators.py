@@ -9,7 +9,7 @@ from api.users.models import User
 def admin_required(func: Callable) -> Callable:
     @wraps(func)
     async def wrapper(*args, **kwargs) -> Any:
-        user: User = await UserDAO.find_one_or_none_by_id(kwargs["token"]["id"])
+        user: User = await UserDAO.find_one_or_none_by_id(kwargs["id"])
 
         if not user or not user.is_admin:
             raise HTTPException(

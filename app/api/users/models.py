@@ -16,4 +16,4 @@ class User(Base):
     is_admin: Mapped[bool] = mapped_column(Boolean, server_default=text('false'))
     balance: Mapped[int] = mapped_column(server_default=text('0'))
     birthday: Mapped[date]
-    password: Mapped[str] = mapped_column(String, nullable=False)
+    password: Mapped[str] = mapped_column(String, nullable=True)

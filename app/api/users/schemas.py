@@ -30,3 +30,7 @@ class LoginUserResponse(BaseModel):
 class ChangePassword(BaseModel):
     password: str
     new_password: str
+
+
+class TelegramIdLogin(BaseModel):
+    telegram_id: int
