@@ -1,14 +1,15 @@
 import jwt
 import datetime
 from fastapi import Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials
 from typing import Dict
 
 from app.api.users.models import User
 from .exceptions import CREDENTIAL_EXCEPTION, CREDENTIAL_EXPIRED, CREDENTIAL_PAYLOAD
 from .constants import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
+from .custom_http_bearer import CustomHTTPBearer
 
-oauth2_scheme = HTTPBearer(scheme_name="JWT Token")
+oauth2_scheme = CustomHTTPBearer(scheme_name="JWT Token")
 
 
 # Функция для создания JWT токена с заданным временем жизни

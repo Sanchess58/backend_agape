@@ -2,13 +2,13 @@ from fastapi.exceptions import HTTPException
 from fastapi import status
 
 CREDENTIAL_PAYLOAD = HTTPException(
-    status_code=status.HTTP_403_FORBIDDEN,
+    status_code=status.HTTP_401_UNAUTHORIZED,
     detail="no payload",
     headers={"WWW-Authenticate": "Bearer"},
 )
 
 CREDENTIAL_EXCEPTION = HTTPException(
-    status_code=status.HTTP_403_FORBIDDEN,
+    status_code=status.HTTP_401_UNAUTHORIZED,
     detail="decode",
     headers={"WWW-Authenticate": "Bearer"},
 )
