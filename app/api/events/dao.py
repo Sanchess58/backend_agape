@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from typing import List
 from sqlalchemy.future import select
 
 from app.api.dao.base import BaseDAO
@@ -9,16 +9,38 @@ from api.users.models import User
 from api.users.dao import UserDAO
 from .exceptions import ALREADY_REGISTERED, EVENT_NOT_STARTED
 from .models import Event, EventUser
+from .schemas import EventResponse
+from .utils import get_presigned_url
+
 
 class EventDAO(BaseDAO):
     model = Event
+
+    @classmethod
+    async def serialize_event(cls, event: Event) -> EventResponse:
+        """Сериализует один объект Event в EventResponse с асинхронным полем."""
+        photo_url = await get_presigned_url(event.bucket_name, event.file_path) if event.bucket_name and event.file_path else None
+
+        return EventResponse(
+            id=event.id,
+            name=event.name,
+            description=event.description,
+            date_and_time=event.date_and_time,
+            reward=event.reward,
+            photo_url=photo_url,
+        )
+
+    @classmethod
+    async def serialize_event_list(cls, events: List[Event]) -> List[EventResponse]:
+        """Сериализует список объектов Event."""
+        return [await cls.serialize_event(event) for event in events]
 
     @classmethod
     async def list_between_dates(cls, date_from: datetime, date_to: datetime) -> list[Event]:
         async with async_session_maker() as session:
             query = select(cls.model).where(cls.model.date_and_time.between(date_from, date_to))
             res = await session.execute(query)
-            return res.scalars().all()
+            return await cls.serialize_event_list(res.scalars().all())
 
 
 class EventUserDAO(BaseDAO):
@@ -28,10 +50,10 @@ class EventUserDAO(BaseDAO):
     async def registration(cls, user_id: int, **data):
         async with async_session_maker() as session:
             async with session.begin():
-                event_users = cls.find_all(user_id=user_id, **data)
+                event_users = await cls.find_all(user_id=user_id, **data)
                 if event_users:
                     raise ALREADY_REGISTERED
-                cls.add(user_id=user_id, **data)
+                await cls.add(user_id=user_id, **data)
 
     @classmethod
     async def confirmation(cls, **data):
@@ -58,3 +80,14 @@ class EventUserDAO(BaseDAO):
 
                 if user and event:
                     user.balance += event.reward
+
+    @classmethod
+    async def my(cls, user_id: int):
+        async with async_session_maker() as session:
+            query = (
+                select(Event)
+                .join(EventUser)
+                .where(Event.date_and_time >= datetime.now(), EventUser.user_id == user_id)
+            )
+            res = await session.execute(query)
+            return await EventDAO.serialize_event_list(res.scalars().all())

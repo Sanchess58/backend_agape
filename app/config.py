@@ -10,6 +10,11 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     JWT_SECRET_KEY: str
     ALGORITHM: str
+    S3_ACCESS_KEY: str
+    S3_SECRET_KEY: str
+    BUCKET_NAME: str
+    S3_URL: str
+    S3_REGION: str
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")

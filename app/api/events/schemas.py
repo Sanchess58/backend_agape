@@ -1,21 +1,15 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 from typing import Optional
-from datetime import datetime, timezone
+from datetime import datetime
 
 
-class EventBase(BaseModel):
+class EventResponse(BaseModel):
+    id: int
     name: str
     description: Optional[str]
     date_and_time: datetime
     reward: Optional[int] = None
-
-    @field_validator("date_and_time")
-    def convert_to_utc(cls, value: datetime) -> datetime:
-        return value.astimezone(timezone.utc).replace(tzinfo=None)
-
-
-class EventResponse(EventBase):
-    id: int
+    photo_url: Optional[str] = None
 
     class Config:
         from_attributes = True

@@ -1,11 +1,13 @@
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timezone
 
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, Response, status, Form, File, UploadFile
 from fastapi.responses import JSONResponse
 
+from app.api.s3_storage import S3Client
 from api.authentication.dependings import get_user_from_token
 from api.decorators import admin_required
-from .schemas import EventResponse, EventUsersResponse, EventBase, EventRegister, EventConfirmation
+from config import settings
+from .schemas import EventResponse, EventUsersResponse, EventRegister, EventConfirmation
 from .dao import EventDAO, EventUserDAO
 
 router = APIRouter(prefix="/events", tags=["Events"])
@@ -20,8 +22,32 @@ async def get_events(date_from: date, date_to: date, token: str = Depends(get_us
 
 @router.post("/", response_model=EventResponse)
 @admin_required
-async def create_event(data: EventBase, token: str = Depends(get_user_from_token)):
-    return await EventDAO.add(**data.model_dump(exclude_unset=True))
+async def create_event(
+    name: str = Form(),
+    description: str = Form(None),
+    date_and_time: datetime = Form(),
+    reward: int = Form(None),
+    photo: UploadFile = File(),
+    token: str = Depends(get_user_from_token),
+):
+
+    await S3Client(
+        access_key=settings.S3_ACCESS_KEY,
+        secret_key=settings.S3_SECRET_KEY,
+        endpoint_url=settings.S3_URL,
+        bucket_name=settings.BUCKET_NAME,
+        region_name=settings.S3_REGION,
+    ).upload_file(file=photo)
+
+    data = {
+        "name": name,
+        "description": description,
+        "date_and_time": date_and_time.astimezone(timezone.utc).replace(tzinfo=None),
+        "reward": reward,
+        "bucket_name": "agape-storage",
+        "file_path": photo.filename,
+    }
+    return await EventDAO.add(**data)
 
 
 @router.post("/register")
@@ -45,4 +71,4 @@ async def event_users(event_id: int, token: str = Depends(get_user_from_token)):
 
 @router.get("/my", response_model=list[EventResponse])
 async def my_events(token: str = Depends(get_user_from_token)):
-    return await EventUserDAO.find_all(user_id=token["id"])
+    return await EventUserDAO.my(user_id=token["id"])
