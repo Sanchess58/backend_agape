@@ -12,6 +12,7 @@ class UserBase(BaseModel):
 
 
 class UserResponse(UserBase):
+    is_admin: bool
     id: int
 
     class Config:

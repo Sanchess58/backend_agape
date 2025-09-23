@@ -15,6 +15,11 @@ async def get_users(token: str = Depends(get_user_from_token)):
     return await UserDAO.all_records()
 
 
+@router.get("/{telegram_id}", response_model=UserResponse)
+async def get_user_by_telegram_id(telegram_id: int, token: str = Depends(get_user_from_token)):
+    return await UserDAO.find_one_or_none(telegram_id=telegram_id)
+
+
 @router.post("/", response_model=UserResponse)
 async def create_user(data: UserBase):
     user_data = data.model_dump(exclude_unset=True)
