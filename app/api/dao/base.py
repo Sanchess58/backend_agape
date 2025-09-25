@@ -3,7 +3,6 @@ from sqlalchemy import update as sqlalchemy_update, delete as sqlalchemy_delete
 from app.database import async_session_maker
 
 
-
 class BaseDAO:
     model = None
 
@@ -52,6 +51,8 @@ class BaseDAO:
         """
         async with async_session_maker() as session:
             query = select(cls.model).filter_by(**filter_by)
+            if where is not None:
+                query = query.where(where)
             result = await session.execute(query)
             return result.scalars().all()
 

@@ -12,6 +12,7 @@ class UserBase(BaseModel):
 
 
 class UserResponse(UserBase):
+    balance: int
     is_admin: bool
     id: int
 
