@@ -27,6 +27,7 @@ async def create_event(
     description: str = Form(None),
     date_and_time: datetime = Form(),
     reward: int = Form(None),
+    location: str = Form(None),
     photo: UploadFile = File(),
     token: str = Depends(get_user_from_token),
 ):
@@ -44,6 +45,7 @@ async def create_event(
         "description": description,
         "date_and_time": date_and_time.astimezone(timezone.utc).replace(tzinfo=None),
         "reward": reward,
+        "location": location,
         "bucket_name": "agape-storage",
         "file_path": photo.filename,
     }

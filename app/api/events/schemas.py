@@ -9,6 +9,7 @@ class EventResponse(BaseModel):
     description: Optional[str]
     date_and_time: datetime
     reward: Optional[int] = None
+    location: Optional[str] = None
     photo_url: Optional[str] = None
 
     class Config:
