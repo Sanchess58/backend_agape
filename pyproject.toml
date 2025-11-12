@@ -20,6 +20,8 @@ dependencies = [
     "passlib",
     "aiobotocore (>=2.24.2,<3.0.0)",
     "python-multipart (>=0.0.20,<0.0.21)",
+    "sqladmin (>=0.21.0,<0.22.0)",
+    "itsdangerous (>=2.2.0,<3.0.0)",
 ]
 
 [tool.poetry]
