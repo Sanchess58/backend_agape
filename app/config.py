@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     BUCKET_NAME: str
     S3_URL: str
     S3_REGION: str
+    ADMIN_SECRET: str
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
