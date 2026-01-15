@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, BigInteger, Boolean
+from sqlalchemy import ForeignKey, BigInteger, Boolean, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
@@ -16,6 +16,7 @@ class Event(Base):
     date_and_time: Mapped[datetime] = mapped_column(nullable=False)
     location: Mapped[str_null_true]
     reward: Mapped[int] = mapped_column(nullable=False)
+    published: Mapped[bool] = mapped_column(server_default=text("false"))
 
 
 class EventUser(Base):
