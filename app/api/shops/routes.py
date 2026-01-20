@@ -7,7 +7,7 @@ from api.authentication.dependings import get_user_from_token
 from api.decorators import admin_required
 
 
-router = APIRouter(prefix="/shops", tags=["Shops"])
+router = APIRouter(prefix="/products", tags=["products"])
 
 
 @router.get("", response_model=list[ShopItemResponse])
