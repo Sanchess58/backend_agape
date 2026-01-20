@@ -7,7 +7,7 @@ from app.api.s3_storage import S3Client
 from api.authentication.dependings import get_user_from_token
 from api.decorators import admin_required
 from config import settings
-from .schemas import EventResponse, EventUsersResponse, EventRegister, EventConfirmation
+from .schemas import EventConfirmation, EventRegister, EventRegisterResponse, EventResponse, EventUsersResponse
 from .dao import EventDAO, EventUserDAO
 
 router = APIRouter(prefix="/events", tags=["Events"])
@@ -52,14 +52,14 @@ async def create_event(
     return await EventDAO.add(**data)
 
 
-@router.post("/register")
+@router.post("/register", response_model=EventRegisterResponse)
 async def event_register(data: EventRegister, token: str = Depends(get_user_from_token)):
     data = data.model_dump(exclude_unset=True)
     await EventUserDAO.registration(user_id=token["id"], **data)
     return JSONResponse(content={"success": "Registration for the event was successful"}, status_code=status.HTTP_200_OK)
 
 
-@router.post("/confirmation")
+@router.post("/confirmation", status_code=status.HTTP_204_NO_CONTENT)
 async def event_confirmation(data: EventConfirmation, token: str = Depends(get_user_from_token)):
     await EventUserDAO.confirmation(**data.model_dump(exclude_unset=True))
     return Response(status_code=status.HTTP_204_NO_CONTENT)

@@ -1,5 +1,8 @@
+from typing import Any
+
 from sqlalchemy.future import select
 from sqlalchemy import update as sqlalchemy_update, delete as sqlalchemy_delete
+
 from app.database import async_session_maker
 
 
@@ -23,7 +26,7 @@ class BaseDAO:
             return result.scalar_one_or_none()
 
     @classmethod
-    async def find_one_or_none(cls, **filter_by):
+    async def find_one_or_none(cls, **filter_by: dict[str, Any]):
         """
         Асинхронно находит и возвращает один экземпляр модели по указанным критериям или None.
 
@@ -39,7 +42,7 @@ class BaseDAO:
             return result.scalar_one_or_none()
 
     @classmethod
-    async def find_all(cls, where=None, **filter_by):
+    async def find_all(cls, where=None, **filter_by: dict[str, Any]):
         """
         Асинхронно находит и возвращает все экземпляры модели, удовлетворяющие указанным критериям.
 
@@ -57,7 +60,7 @@ class BaseDAO:
             return result.scalars().all()
 
     @classmethod
-    async def add(cls, **values):
+    async def add(cls, **values: dict[str, Any]):
         """
         Асинхронно создает новый экземпляр модели с указанными значениями.
 
@@ -73,12 +76,6 @@ class BaseDAO:
                 session.add(instance)
             await session.refresh(instance)
             return instance
-
-    # @classmethod
-    # async def update(cls, instance, **values):
-    #     async with async_session_maker() as session:
-    #         async with session.begin():
-    #             pass
 
     @classmethod
     async def all_records(cls):

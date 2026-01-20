@@ -24,8 +24,7 @@ class AdminAuth(AuthenticationBackend):
         return True
 
     async def authenticate(self, request: Request) -> bool:
-        token = request.session.get("token")
-        if not token:
+        if not (token := request.session.get("token")):
             return False
 
         async with async_session_maker() as session:

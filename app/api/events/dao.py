@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import Any, List
 from sqlalchemy.future import select
 
 from app.api.dao.base import BaseDAO
@@ -47,7 +47,7 @@ class EventUserDAO(BaseDAO):
     model = EventUser
 
     @classmethod
-    async def registration(cls, user_id: int, **data):
+    async def registration(cls, user_id: int, **data: dict[str, Any]):
         async with async_session_maker() as session:
             async with session.begin():
                 event_users = await cls.find_all(user_id=user_id, **data)
@@ -56,7 +56,7 @@ class EventUserDAO(BaseDAO):
                 await cls.add(user_id=user_id, **data)
 
     @classmethod
-    async def confirmation(cls, **data):
+    async def confirmation(cls, **data: dict[str, Any]) -> None:
         async with async_session_maker() as session:
             async with session.begin():
                 event_user: EventUser | None = await cls.find_one_or_none(**{"user_id": data["user_id"], "event_id": data["event_id"]})
