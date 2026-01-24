@@ -1,6 +1,6 @@
 from datetime import date, datetime, time, timezone
 
-from fastapi import APIRouter, Depends, Response, status, Form, File, UploadFile
+from fastapi import APIRouter, Depends, Form, File, Response, status, UploadFile
 from fastapi.responses import JSONResponse
 
 from app.api.s3_storage import S3Client
@@ -73,7 +73,7 @@ async def event_confirmation(data: EventConfirmation, token: str = Depends(get_u
 @router.get("/{event_id}/users", response_model=list[EventUsersResponse])
 @admin_required
 async def event_users(event_id: int, token: str = Depends(get_user_from_token)):
-    return await EventUserDAO.find_all(id=event_id)
+    return await EventUserDAO.find_all(event_id=event_id)
 
 
 @router.get("/my", response_model=list[EventResponse])

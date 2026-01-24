@@ -18,7 +18,7 @@ class UserDAO(BaseDAO):
             query = select(cls.model).filter_by(login=login, password=hash_password(password))
             result = await session.execute(query)
             return result.scalar_one_or_none()
-    
+
     @classmethod
     async def registration(cls, **data):
         telegram_id = data["telegram_id"]
@@ -32,12 +32,4 @@ class UserDAO(BaseDAO):
                 session.add(instance)
             await session.refresh(instance)
             return instance
-
-    # @classmethod
-    # async def change_password(cls, **data):
-    #     async with async_session_maker() as session:
-    #         login, password, new_password = data.values()
-
-    #         query = select(cls.model).filter_by(login=login, password=hash_password(password))
-    #         result = await session.execute(query)
-    #         return result.scalar_one_or_none()
+    

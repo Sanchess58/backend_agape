@@ -8,4 +8,5 @@ class EventAdmin(ModelView, model=Event):
 
 
 class EventUserAdmin(ModelView, model=EventUser):
+    form_include_pk = True
     column_list = [EventUser.id, EventUser.user_id, EventUser.event_id, EventUser.attended]
