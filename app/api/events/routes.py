@@ -13,6 +13,11 @@ from .dao import EventDAO, EventUserDAO
 router = APIRouter(prefix="/events", tags=["Events"])
 
 
+@router.get("/{event_id}/", response_model=EventResponse)
+async def get_events(event_id: int, token: str = Depends(get_user_from_token)):
+    return await EventDAO.find_one_or_none(id=event_id)
+
+
 @router.get("/", response_model=list[EventResponse])
 async def get_events(date_from: date, date_to: date, token: str = Depends(get_user_from_token)):
     start = datetime.combine(date_from, time.min)
