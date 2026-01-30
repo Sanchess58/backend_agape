@@ -5,6 +5,7 @@ from admin_auth import AdminAuth
 from api.events.admin import EventAdmin, EventUserAdmin
 from api.events.routes import router as event_router
 from api.shops.routes import router as shop_router
+from api.shops.admin import ShopItemAdmin
 from api.users.admin import UserAdmin
 from api.users.routes import router as user_router
 from config import settings
@@ -22,3 +23,4 @@ admin = Admin(app, engine, authentication_backend=admin_auth_backend)
 admin.add_view(UserAdmin)
 admin.add_view(EventAdmin)
 admin.add_view(EventUserAdmin)
+admin.add_view(ShopItemAdmin)

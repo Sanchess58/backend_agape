@@ -8,6 +8,9 @@ class UserBase(BaseModel):
     last_name: str
     login: str
     birthday: date | None
+    church: str | None
+    referral_source: str | None
+    gender: str
 
 
 class UserResponse(UserBase):

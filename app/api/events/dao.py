@@ -27,6 +27,7 @@ class EventDAO(BaseDAO):
             description=event.description,
             date_and_time=event.date_and_time,
             reward=event.reward,
+            location=event.location,
             photo_url=photo_url,
         )
 
@@ -87,7 +88,8 @@ class EventUserDAO(BaseDAO):
             query = (
                 select(Event)
                 .join(EventUser)
-                .where(Event.date_and_time >= datetime.now(), EventUser.user_id == user_id)
+                # .where(Event.date_and_time >= datetime.now(), EventUser.user_id == user_id)
+                .where(EventUser.user_id == user_id)
             )
             res = await session.execute(query)
             return await EventDAO.serialize_event_list(res.scalars().all())
