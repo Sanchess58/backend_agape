@@ -4,26 +4,24 @@ from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials
 from typing import Dict
 
+from app.api.authentication.constants import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
+from app.api.authentication.custom_http_bearer import CustomHTTPBearer
+from app.api.authentication.exceptions import CREDENTIAL_EXCEPTION, CREDENTIAL_EXPIRED, CREDENTIAL_PAYLOAD
 from app.api.users.models import User
-from .exceptions import CREDENTIAL_EXCEPTION, CREDENTIAL_EXPIRED, CREDENTIAL_PAYLOAD
-from .constants import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
-from .custom_http_bearer import CustomHTTPBearer
 
 oauth2_scheme = CustomHTTPBearer(scheme_name="JWT Token")
 
 
-# Функция для создания JWT токена с заданным временем жизни
 def create_jwt_token(data: Dict):
     """
     Функция для создания JWT токена. Мы копируем входные данные, добавляем время истечения и кодируем токен.
     """
-    to_encode = data.copy()  # Копируем данные, чтобы не изменить исходный словарь
-    expire = datetime.datetime.now() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)  # Задаем время истечения токена
-    to_encode.update({"exp": expire.timestamp()})  # Добавляем время истечения в данные токена
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)  # Кодируем токен с использованием секретного ключа и алгоритма
+    to_encode = data.copy()
+    expire = datetime.datetime.now() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire.timestamp()})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-# Функция для получения пользователя из токена
 def get_user_from_token(token: HTTPAuthorizationCredentials = Depends(oauth2_scheme)):
     """
     Функция для извлечения информации о пользователе из токена. Проверяем токен и извлекаем утверждение о пользователе.
@@ -33,9 +31,9 @@ def get_user_from_token(token: HTTPAuthorizationCredentials = Depends(oauth2_sch
         if not payload:
             raise CREDENTIAL_PAYLOAD
         return payload
-    except jwt.exceptions.ExpiredSignatureError as ese:
+    except jwt.exceptions.ExpiredSignatureError:
         raise CREDENTIAL_EXPIRED
-    except jwt.exceptions.DecodeError as de:
+    except jwt.exceptions.DecodeError:
         raise CREDENTIAL_EXCEPTION
 
 

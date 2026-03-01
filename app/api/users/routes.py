@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, Query, HTTPException, status
 from fastapi.responses import JSONResponse
 
-from api.authentication.dependings import create_jwt_token, get_data_for_jwt, get_user_from_token
-from api.decorators import admin_required
-from .dao import UserDAO
-from .models import User
-from .schemas import UserBase, UserResponse, TelegramIdLogin, LoginUserResponse
+from app.api.authentication.dependings import create_jwt_token, get_data_for_jwt, get_user_from_token
+from app.api.decorators import admin_required
+from app.api.users.dao import UserDAO
+from app.api.users.models import User
+from app.api.users.schemas import UserBase, UserResponse, TelegramIdLogin, LoginUserResponse
 
 
 router = APIRouter(prefix="/users", tags=["Users"])

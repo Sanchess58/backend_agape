@@ -1,4 +1,4 @@
-from config import settings
+from app.config import settings
 
 SECRET_KEY = settings.JWT_SECRET_KEY
 ALGORITHM = settings.ALGORITHM

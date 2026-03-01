@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, Response, status
 
-from .schemas import ShopItemBase, ShopItemResponse, ShopItemBuy
-from .dao import ShopDAO
-from api.users.dao import UserDAO
-from api.authentication.dependings import get_user_from_token
-from api.decorators import admin_required
+from app.api.shops.schemas import ShopItemBase, ShopItemResponse, ShopItemBuy
+from app.api.shops.dao import ShopDAO
+from app.api.users.dao import UserDAO
+from app.api.authentication.dependings import get_user_from_token
+from app.api.decorators import admin_required
 
 
 router = APIRouter(prefix="/products", tags=["products"])

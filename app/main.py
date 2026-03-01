@@ -1,15 +1,15 @@
 from fastapi import FastAPI
 from sqladmin import Admin
 
-from admin_auth import AdminAuth
-from api.events.admin import EventAdmin, EventUserAdmin
-from api.events.routes import router as event_router
-from api.shops.routes import router as shop_router
-from api.shops.admin import ShopItemAdmin
-from api.users.admin import UserAdmin
-from api.users.routes import router as user_router
-from config import settings
-from database import engine
+from app.admin_auth import AdminAuth
+from app.api.events.admin import EventAdmin, EventUserAdmin
+from app.api.events.routes import router as event_router
+from app.api.shops.routes import router as shop_router
+from app.api.shops.admin import ShopItemAdmin
+from app.api.users.admin import UserAdmin
+from app.api.users.routes import router as user_router
+from app.config import settings
+from app.database import engine
 
 app = FastAPI(title="My FastAPI App")
 

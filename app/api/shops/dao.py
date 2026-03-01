@@ -1,9 +1,10 @@
 from app.api.dao.base import BaseDAO
-from .models import ShopItem
-from api.users.models import User
+from app.api.shops.exceptions import INSUFFICIENT_FUNDS, WRONG_QUANTITY
+from app.api.shops.models import ShopItem
+from app.api.users.models import User
 from app.database import async_session_maker
 from app.exceptions import NOT_FOUND
-from .exceptions import INSUFFICIENT_FUNDS, WRONG_QUANTITY
+
 
 class ShopDAO(BaseDAO):
     model = ShopItem

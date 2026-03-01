@@ -1,6 +1,6 @@
 from sqladmin import ModelView
 
-from api.events.models import Event, EventUser
+from app.api.events.models import Event, EventUser
 
 
 class EventAdmin(ModelView, model=Event):

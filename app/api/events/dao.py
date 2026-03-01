@@ -3,14 +3,14 @@ from typing import Any, List
 from sqlalchemy.future import select
 
 from app.api.dao.base import BaseDAO
+from app.api.events.exceptions import ALREADY_REGISTERED, EVENT_NOT_STARTED
+from app.api.events.models import Event, EventUser
+from app.api.events.schemas import EventResponse
+from app.api.users.dao import UserDAO
+from app.api.users.models import User
+from app.api.events.utils import get_presigned_url
 from app.database import async_session_maker
 from app.exceptions import NOT_FOUND
-from api.users.models import User
-from api.users.dao import UserDAO
-from .exceptions import ALREADY_REGISTERED, EVENT_NOT_STARTED
-from .models import Event, EventUser
-from .schemas import EventResponse
-from .utils import get_presigned_url
 
 
 class EventDAO(BaseDAO):
@@ -88,7 +88,6 @@ class EventUserDAO(BaseDAO):
             query = (
                 select(Event)
                 .join(EventUser)
-                # .where(Event.date_and_time >= datetime.now(), EventUser.user_id == user_id)
                 .where(EventUser.user_id == user_id)
             )
             res = await session.execute(query)

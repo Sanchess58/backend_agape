@@ -1,9 +1,9 @@
+from contextlib import contextmanager
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped
 
-from annotations import created_at, updated_at
-from contextlib import contextmanager
-from config import settings
+from app.annotations import created_at, updated_at
+from app.config import settings
 
 DB_HOST = settings.DB_HOST
 DB_PORT = settings.DB_PORT

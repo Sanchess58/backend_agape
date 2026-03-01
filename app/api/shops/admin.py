@@ -1,6 +1,6 @@
 from sqladmin import ModelView
 
-from api.shops.models import ShopItem
+from app.api.shops.models import ShopItem
 
 
 class ShopItemAdmin(ModelView, model=ShopItem):

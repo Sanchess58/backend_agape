@@ -4,11 +4,17 @@ from fastapi import APIRouter, Depends, Form, File, Response, status, UploadFile
 from fastapi.responses import JSONResponse
 
 from app.api.s3_storage import S3Client
-from api.authentication.dependings import get_user_from_token
-from api.decorators import admin_required
-from config import settings
-from .schemas import EventConfirmation, EventRegister, EventRegisterResponse, EventResponse, EventUsersResponse
-from .dao import EventDAO, EventUserDAO
+from app.api.authentication.dependings import get_user_from_token
+from app.api.decorators import admin_required
+from app.config import settings
+from app.api.events.schemas import (
+    EventConfirmation,
+    EventRegister,
+    EventRegisterResponse,
+    EventResponse,
+    EventUsersResponse,
+)
+from app.api.events.dao import EventDAO, EventUserDAO
 
 router = APIRouter(prefix="/events", tags=["Events"])
 

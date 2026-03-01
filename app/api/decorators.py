@@ -2,8 +2,8 @@ from fastapi import HTTPException, status
 from functools import wraps
 from typing import Callable, Any
 
-from api.users.dao import UserDAO
-from api.users.models import User
+from app.api.users.dao import UserDAO
+from app.api.users.models import User
 
 
 def admin_required(func: Callable) -> Callable:

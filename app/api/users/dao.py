@@ -4,7 +4,7 @@ from .models import User
 from app.api.dao.base import BaseDAO
 from app.database import async_session_maker
 
-from .utils import hash_password
+from app.api.users.utils import hash_password
 
 
 class UserDAO(BaseDAO):

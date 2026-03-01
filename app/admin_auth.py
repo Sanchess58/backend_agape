@@ -1,8 +1,8 @@
 from sqladmin.authentication import AuthenticationBackend
 from starlette.requests import Request
 from sqlalchemy.future import select
-from api.users.models import User
-from database import async_session_maker
+from app.api.users.models import User
+from app.database import async_session_maker
 
 
 class AdminAuth(AuthenticationBackend):
