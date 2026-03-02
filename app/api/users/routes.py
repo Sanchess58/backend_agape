@@ -16,7 +16,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
 async def get_users(ids: list[int] | None = Query(default=None), token: str = Depends(get_user_from_token)):
     if ids:
         return await UserDAO.find_all(where=User.id.in_(ids))
-        
+
     return await UserDAO.all_records()
 
 
