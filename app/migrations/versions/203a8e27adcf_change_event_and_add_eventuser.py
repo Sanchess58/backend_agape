@@ -1,7 +1,7 @@
 """change event and add eventuser
 
 Revision ID: 203a8e27adcf
-Revises: 757dba0f8074
+Revises: 4e93492f9fb3
 Create Date: 2025-07-02 17:22:33.149757
 
 """
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = '203a8e27adcf'
-down_revision: Union[str, None] = '757dba0f8074'
+down_revision: Union[str, None] = '4e93492f9fb3'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
