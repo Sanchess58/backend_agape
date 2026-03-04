@@ -3,7 +3,7 @@ from typing import Any, List
 from sqlalchemy.future import select
 
 from app.api.dao.base import BaseDAO
-from app.api.events.exceptions import ALREADY_REGISTERED, EVENT_NOT_STARTED
+from app.api.events.exceptions import ALREADY_REGISTERED, EVENT_NOT_STARTED, EVENT_LESS_THAN_DAY, NOT_REGISTERED
 from app.api.events.models import Event, EventUser
 from app.api.events.schemas import EventResponse
 from app.api.users.dao import UserDAO
@@ -11,6 +11,9 @@ from app.api.users.models import User
 from app.api.events.utils import get_presigned_url
 from app.database import async_session_maker
 from app.exceptions import NOT_FOUND
+
+HOUR_IN_SECONDS = 60 * 60
+DAY_IN_HOURS = 24 * HOUR_IN_SECONDS
 
 
 class EventDAO(BaseDAO):
@@ -55,6 +58,20 @@ class EventUserDAO(BaseDAO):
                 if event_users:
                     raise ALREADY_REGISTERED
                 await cls.add(user_id=user_id, **data)
+
+    @classmethod
+    async def cancel(cls, user_id: int, **data: dict[str, Any]):
+        async with async_session_maker() as session:
+            async with session.begin():
+                event_users = await cls.find_all(user_id=user_id, **data)
+                if not event_users:
+                    raise NOT_REGISTERED
+                event: Event = await EventDAO.find_one_or_none_by_id(data["event_id"])
+
+                if (event.date_and_time - datetime.now()).total_seconds() <= DAY_IN_HOURS:
+                    raise EVENT_LESS_THAN_DAY
+
+                await cls.delete(user_id=user_id, **data)
 
     @classmethod
     async def confirmation(cls, **data: dict[str, Any]) -> None:

@@ -70,7 +70,14 @@ async def event_register(data: EventRegister, token: str = Depends(get_user_from
     return JSONResponse(content={"success": "Registration for the event was successful"}, status_code=status.HTTP_200_OK)
 
 
+@router.delete("/{event_id}/register/cancel")
+async def event_register_cancel(event_id: int, token: str = Depends(get_user_from_token)):
+    await EventUserDAO.cancel(user_id=token["id"], event_id=event_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
 @router.post("/confirmation", status_code=status.HTTP_204_NO_CONTENT)
+@admin_required
 async def event_confirmation(data: EventConfirmation, token: str = Depends(get_user_from_token)):
     await EventUserDAO.confirmation(**data.model_dump(exclude_unset=True))
     return Response(status_code=status.HTTP_204_NO_CONTENT)

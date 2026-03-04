@@ -76,6 +76,22 @@ class BaseDAO:
                 session.add(instance)
             await session.refresh(instance)
             return instance
+        
+    @classmethod
+    async def delete(cls, **values: dict[str, Any]):
+        """
+        Асинхронно удаляет экземпляр модели с указанными значениями.
+
+        Аргументы:
+            **values: Именованные параметры для удаления экземпляра модели.
+
+        Возвращает: None.
+        """
+        async with async_session_maker() as session:
+            async with session.begin():
+                instance = await cls.find_one_or_none(**values)
+                if instance:
+                    await session.delete(instance)
 
     @classmethod
     async def all_records(cls):
