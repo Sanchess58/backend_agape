@@ -9,6 +9,7 @@ class ShopItem(Base):
     id: Mapped[int_pk]
     name: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str_null_true]
-    photo: Mapped[bytes] = mapped_column(LargeBinary, nullable=True)
+    bucket_name: Mapped[str] = mapped_column(nullable=True)
+    file_path: Mapped[str] = mapped_column(nullable=True)
     quantity: Mapped[int] = mapped_column(default=1)
     price: Mapped[int]

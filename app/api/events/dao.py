@@ -8,7 +8,7 @@ from app.api.events.models import Event, EventUser
 from app.api.events.schemas import EventResponse
 from app.api.users.dao import UserDAO
 from app.api.users.models import User
-from app.api.events.utils import get_presigned_url
+from app.api.utils import get_presigned_url
 from app.database import async_session_maker
 from app.exceptions import NOT_FOUND
 

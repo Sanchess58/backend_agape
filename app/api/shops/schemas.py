@@ -5,7 +5,7 @@ from typing import Optional
 class ShopItemBase(BaseModel):
     name: str
     description: Optional[str] = None
-    photo: Optional[str] = None
+    photo_url: Optional[str] = None
     quantity: int
     price: int
 
