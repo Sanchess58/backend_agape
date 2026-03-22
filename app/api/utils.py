@@ -1,3 +1,5 @@
+import base64
+
 from app.api.s3_storage import S3Client
 from app.config import settings
 
@@ -18,3 +20,18 @@ async def get_presigned_url(bucket: str, key: str, expires_in: int = HOUR_IN_SEC
             Params={"Bucket": bucket, "Key": key},
             ExpiresIn=expires_in
         )
+
+
+async def get_base64_photo(bucket: str, key: str):
+    client = S3Client(
+        settings.S3_ACCESS_KEY,
+        settings.S3_SECRET_KEY,
+        settings.S3_URL,
+        settings.BUCKET_NAME,
+        settings.S3_REGION,
+    ).get_client()
+    async with client as c:
+        s3_object = await c.get_object(Bucket=bucket, Key=key)
+        image_bytes = await s3_object["Body"].read()
+
+        return base64.b64encode(image_bytes).decode("utf-8")

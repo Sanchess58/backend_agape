@@ -7,21 +7,23 @@ from app.api.s3_storage import S3Client
 from app.api.authentication.dependings import get_user_from_token
 from app.api.decorators import admin_required
 from app.config import settings
+from app.api.events.dao import EventDAO, EventUserDAO
 from app.api.events.schemas import (
     EventConfirmation,
+    EventConfirmationResponse,
     EventRegister,
     EventRegisterResponse,
     EventResponse,
     EventUsersResponse,
 )
-from app.api.events.dao import EventDAO, EventUserDAO
+from app.api.events.services import EventService
 
 router = APIRouter(prefix="/events", tags=["Events"])
 
 
 @router.get("/{event_id}/", response_model=EventResponse)
 async def get_events(event_id: int, token: str = Depends(get_user_from_token)):
-    return await EventDAO.find_one_or_none(id=event_id)
+    return await EventDAO.get(event_id)
 
 
 @router.get("/", response_model=list[EventResponse])
@@ -76,9 +78,20 @@ async def event_register_cancel(event_id: int, token: str = Depends(get_user_fro
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.post("/confirmation", status_code=status.HTTP_204_NO_CONTENT)
+# @router.post("/confirmation", status_code=status.HTTP_200_OK)
+# @admin_required
+# async def event_confirmation(
+#     data: EventConfirmation, token: str = Depends(get_user_from_token)
+# ) -> EventConfirmationResponse:
+#     event_user = await EventUserDAO.confirmation(**data.model_dump(exclude_unset=True))
+#     return await EventService.get_reward_by(event_user)
+
+
+@router.post("/confirmation", status_code=status.HTTP_200_OK)
 @admin_required
-async def event_confirmation(data: EventConfirmation, token: str = Depends(get_user_from_token)):
+async def event_confirmation(
+    data: EventConfirmation, token: str = Depends(get_user_from_token)
+) -> EventConfirmationResponse:
     await EventUserDAO.confirmation(**data.model_dump(exclude_unset=True))
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 

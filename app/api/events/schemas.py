@@ -33,3 +33,9 @@ class EventUsersResponse(BaseModel):
 
 class EventRegisterResponse(BaseModel):
     success: str
+
+
+class EventConfirmationResponse(BaseModel):
+    reward: int
+    event_name: str
+    balance: int

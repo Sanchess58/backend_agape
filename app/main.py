@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.gzip import GZipMiddleware
 from sqladmin import Admin
 
 from app.admin_auth import AdminAuth
@@ -12,7 +13,7 @@ from app.config import settings
 from app.database import engine
 
 app = FastAPI(title="My FastAPI App")
-
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.include_router(event_router)
 app.include_router(user_router)
 app.include_router(shop_router)

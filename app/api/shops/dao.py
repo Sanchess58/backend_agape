@@ -7,7 +7,7 @@ from app.api.shops.exceptions import INSUFFICIENT_FUNDS, WRONG_QUANTITY
 from app.api.shops.models import ShopItem
 from app.api.shops.schemas import ShopItemResponse
 from app.api.users.models import User
-from app.api.utils import get_presigned_url
+from app.api.utils import get_base64_photo
 from app.database import async_session_maker
 from app.exceptions import NOT_FOUND
 
@@ -18,8 +18,8 @@ class ShopDAO(BaseDAO):
     @classmethod
     async def serialize_shop_item(cls, shop_item: ShopItem) -> ShopItemResponse:
         """Сериализует один объект ShopItem в ShopItemResponse с асинхронным полем."""
-        photo_url = (
-            await get_presigned_url(
+        base64_photo = (
+            await get_base64_photo(
                 shop_item.bucket_name, shop_item.file_path
             )
             if shop_item.bucket_name and shop_item.file_path
@@ -32,7 +32,7 @@ class ShopDAO(BaseDAO):
             description=shop_item.description,
             quantity=shop_item.quantity,
             price=shop_item.price,
-            photo_url=photo_url,
+            photo_url=base64_photo,
         )
 
     @classmethod
